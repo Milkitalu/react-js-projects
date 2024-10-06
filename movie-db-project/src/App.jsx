@@ -25,19 +25,27 @@ function App() {
 
   };
 
+  const cacheToLocalStorage = (items) => {
+    localStorage.setItem("movie-db-app-favourites", JSON.stringify(items));
+  }
+
   useEffect(() => {
     fetchMovieRequest(searchValue);
   }, [searchValue]);
 
-  const AddFavouriteMovie = (movie) => {
+  const addFavouriteMovie = (movie) => {
     const newFavouriteList = [...favourites, movie];
     setFavorites(newFavouriteList);
+    cacheToLocalStorage(newFavouriteList);
   };
 
   const removeFavouriteMovie =(movie) => {
-    const newFavouriteList = favourites.filter(
+    const updatedFavouriteList = favourites.filter(
       (favourite) => favourite.imdbID !== movie.imdbID
     );
+
+    setFavorites(updatedFavouriteList);
+    cacheToLocalStorage(updatedFavouriteList);
   }
 
   return (
@@ -53,7 +61,7 @@ function App() {
         <div className='d-flex align-items-center gap-1'>
          < MovieList 
                    movies = {movies}
-                   handleFavouriteClick = {AddFavouriteMovie}
+                   handleFavouriteClick = {addFavouriteMovie}
                    favouriteComponent = {AddFavorite}      
                    />
         </div>
