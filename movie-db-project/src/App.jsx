@@ -4,8 +4,8 @@ import MovieList from './components/MovieList';
 import './App.css'
 import MovieListHeading from './components/MovieListHeading';
 import SearchBox from './components/SearchBox';
-import AddFavorite from './components/AddFavorites';
-import RemoveFavorite from './components/RemoveFavorite';
+import AddFavorites from './components/AddFavorites';
+import RemoveFavorites from './components/RemoveFavorite';
 
 
 function App() {
@@ -25,14 +25,24 @@ function App() {
 
   };
 
-  const cacheToLocalStorage = (items) => {
-    localStorage.setItem("movie-db-app-favourites", JSON.stringify(items));
-  }
-
   useEffect(() => {
     fetchMovieRequest(searchValue);
   }, [searchValue]);
 
+  useEffect(() =>{
+    const movieFavourites = JSON.parse(
+      localStorage.getItem("movie-db")
+    );
+    if(movieFavourites) {
+      setFavorites(movieFavourites);
+    }
+  }, []);
+ 
+
+  const cacheToLocalStorage = (items) => {
+    localStorage.setItem("movie-db", JSON.stringify(items));
+  };
+  
   const addFavouriteMovie = (movie) => {
     const newFavouriteList = [...favourites, movie];
     setFavorites(newFavouriteList);
@@ -61,18 +71,18 @@ function App() {
         <div className='d-flex align-items-center gap-1'>
          < MovieList 
                    movies = {movies}
-                   handleFavouriteClick = {addFavouriteMovie}
-                   favouriteComponent = {AddFavorite}      
+                   handleFavouritesClick = {addFavouriteMovie}
+                   favouriteComponent = {AddFavorites}      
                    />
         </div>
         <div className='row d-flex align-items-center mt-4 mb-4'>
           <MovieListHeading heading = 'Favourites' />
         </div>
-        <div className='row'>
+        <div className='d-flex align-items-center gap-1'>
           <MovieList 
                   movies = {favourites}
                   handleFavouritesClick = {removeFavouriteMovie}
-                  favouriteComponent = {RemoveFavorite}
+                  favouriteComponent = {RemoveFavorites}
                   />
                   
         </div>
